@@ -1,0 +1,57 @@
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <climits>
+using ui= unsigned int;
+std::ifstream fin("potcoave.in");
+std::ofstream fout("potcoave.out");
+long long m,total=0,zile=0,zilebune=LLONG_MAX-1;
+ui n;
+std::vector<std::pair<long long,long long>>v;
+long long verif(long long a)
+{
+    long long poot=0;
+    for(ui i=0;i<n;i++)
+    {
+        poot+=a*v[i].first-(a/v[i].second)*v[i].first;
+    }
+    return poot;
+}
+long long cautarebin(long long st, long long dr)
+{
+    while(st<=dr)
+    {
+        long long mid=(st+dr)/2;
+        if(verif(mid)==m)
+        {
+            zilebune=mid;
+            break;
+        }
+        else if(verif(mid)>m)
+        {
+            if(zilebune>mid)zilebune=mid;
+            dr=mid-1;
+        }
+        else st=mid+1;
+    }
+    return zilebune;
+}
+void citire()
+{
+    fin>>m;
+    fin>>n;
+    v.resize(n);
+    for(ui i=0;i<n;i++)
+    {
+        fin>>v[i].first>>v[i].second;
+        total+=v[i].first;
+    }
+    zile=m/total;
+    if(!zile)zile=1;
+    fout<<cautarebin(zile,zile*2);
+}
+int main()
+{
+    citire();
+    return 0;
+}
